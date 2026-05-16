@@ -1,20 +1,74 @@
 \chapter{RESULTADOS E DISCUSSÕES}
 \label{cap:resultados_e_discussoes}
 
-Neste capítulo, são apresentados e discutidos os resultados das avaliações experimentais conduzidas para validar a eficácia da arquitetura de rede neural híbrida proposta. O estudo foi cuidadosamente estruturado para isolar a influência da injeção do fluxo óptico e quantificar a robustez da segmentação semântica perante fenômenos severos de mimetismo, além de discutir detalhadamente as limitações inerentes e as implicações práticas da tecnologia em sistemas reais de Manejo Integrado de Pragas.
+Neste capítulo, são apresentados e discutidos os resultados das avaliações experimentais conduzidas para validar a eficácia da arquitetura de rede neural híbrida proposta. O estudo foi cuidadosamente estruturado para isolar a influência da injeção do fluxo óptico e quantificar a robustez da segmentação semântica perante fenômenos severos de mimetismo, além de discutir detalhadamente as limitações inerentes e as implicações práticas da tecnologia em sistemas reais de Manejo Integrado de Pragas. O desempenho quantitativo foi mensurado priorizando indicadores robustos ao desbalanceamento de classes, como o \textit{F1-Score} e a Interseção sobre a União (IoU).
 
-\section{Desempenho da CNN}
-\label{sec:desempenho_cnn}
+\section{Experimento 1: Validação em Cenário de Controle (Dataset Red)}
+\label{sec:exp_red}
 
-O desempenho quantitativo de cada abordagem investigada (Baseline estático RGB vs. U-Net Híbrida Espácio-Temporal) foi mensurado por meio de métricas estatísticas rigorosas voltadas para a segmentação de instâncias. Conforme detalhado na seção de fundamentação teórica, a análise não se limitou à acurácia geral — que tende a apresentar vieses otimistas em cenários de desbalanceamento extremo de classes —, priorizando indicadores mais representativos como o \textit{F1-Score} e a Interseção sobre a União (IoU), os quais penalizam severamente a ocorrência de falsos positivos em torno das bordas do alvo.
+Para validar o sistema de forma progressiva, o modelo espacial (Baseline RGB) foi inicialmente avaliado no \textbf{Dataset Red}, configurado como cenário de controle. Conforme esperado, todas as arquiteturas espaciais demonstraram convergência robusta e alta acurácia de segmentação. 
 
-Para validar o sistema de forma progressiva, o modelo espacial (Baseline RGB) foi inicialmente avaliado no \textbf{Dataset Red (Cenário de Controle)}. Conforme esperado, todas as arquiteturas espaciais demonstraram convergência robusta e alta acurácia de segmentação. Este desempenho inicial é atribuído à alta distinção espectral (contraste cromático) entre o inseto e o substrato foliar, o que trivializa a extração de gradientes de borda pela rede neural, eliminando a ambiguidade na distinção figura-fundo.
+Este desempenho inicial é atribuído à alta distinção espectral (contraste cromático evidente) entre o inseto de coloração avermelhada e o substrato foliar verde. Tal contraste trivializa a extração de gradientes de borda pela rede neural, eliminando a ambiguidade na distinção figura-fundo. A Figura \ref{fig:relatorio_red} demonstra o relatório analítico da segmentação, onde as abordagens espaciais identificam o inseto com precisão, comprovando que a topologia da U-Net é funcional em cenários isolados.
 
-A etapa subsequente de validação incidiu sobre o \textbf{Dataset Black (Contraste de Luminância)}. Neste cenário, observou-se uma limitação crítica e surpreendente das abordagens puramente espaciais: tanto a arquitetura U-Net padrão quanto a variante com \textit{Data Augmentation} extensivo demonstraram incapacidade de segmentar o objeto. A análise de erro indicou que, apesar da perceptível diferença de luminância a olho nu, a assinatura espectral do inseto escuridão apresentou baixa distinção na abstração de convolução em relação ao substrato foliar (\textit{Musa spp.}). O severo desbalanceamento de classes resultou em uma falha de convergência, onde a otimização da função de perda estagnou em um mínimo local degenerado: a rede convergiu para uma solução trivial, classificando todos os pixels como a classe majoritária (fundo foliar), o que maximizava artificialmente a acurácia global para valores acima de $99\%$ enquanto ignorava o alvo por completo. A tentativa de compensar essa falha através de aumento agressivo de dados preservou a razão de ocupação espacial minoritária, revelando-se matematicamente insuficiente para retificar este viés estatístico.
+\begin{figure}[htb]
+    \centering
+    \caption{Relatório Analítico de Segmentação - Experimento 1 (Dataset Red).}
+    \includegraphics[width=0.9\textwidth]{figuras/relatorio_red.png}
+    \fonte{O autor (2026).}
+    \label{fig:relatorio_red}
+\end{figure}
 
-Para contornar essa deficiência estrutural crítica no Dataset Black e enfrentar o desafio definitivo do \textbf{Dataset Green (Camuflagem Crítica)}, a arquitetura foi estendida para o modelo Híbrido. Essa rede implementa a fusão precoce (\textit{early fusion}) da representação de aparência (RGB) com a representação cinemática do alvo (Fluxo Óptico de Farneback). A injeção dessa assinatura temporal provou-se determinante e capaz de manter um desempenho consistente de forma transversal nos três cenários. A análise sugeriu que a incorporação do Fluxo Óptico Denso operou, funcionalmente, como um mapa de saliência (\textit{saliency map}) de alta magnitude. A componente temporal introduziu valores de ativação significativos exclusivamente na Região de Interesse, garantindo uma altíssima relação sinal-ruído. Do ponto de vista da otimização, esta disparidade induziu a propagação de gradientes de erro elevados durante a fase de \textit{backpropagation}, forçando a atualização dos pesos sinápticos focada especificamente na dinâmica do objeto.
+\section{Experimento 2: Limitações em Cenários de Luminância (Dataset Black)}
+\label{sec:exp_black}
 
-Com isso, o modelo logrou transpor simultaneamente o viés estatístico do desbalanceamento de classes e a ambiguidade espectral da camuflagem verde-sobre-verde. A Tabela \ref{tab:metricas_desempenho} sintetiza o abismo de desempenho verificado entre os modelos quando submetidos ao cenário de mimetismo crítico.
+A etapa subsequente de validação incidiu sobre o \textbf{Dataset Black (Contraste de Luminância)}. Neste cenário, o espécime apresenta coloração preta sobre a folha verde. Observou-se uma limitação crítica e surpreendente das abordagens puramente espaciais: tanto a arquitetura U-Net padrão quanto a variante com \textit{Data Augmentation} extensivo demonstraram incapacidade de segmentar o objeto.
+
+A análise indicou que, apesar da perceptível diferença de luminância a olho nu, a assinatura espectral do inseto escuro apresentou baixa distinção na abstração de convolução em relação ao substrato foliar (\textit{Musa spp.}). Consequentemente, o severo desbalanceamento de classes (onde o fundo domina mais de $99\%$ da imagem) resultou em uma falha de convergência. A otimização da função de perda estagnou em um mínimo local degenerado: a rede convergiu para a solução trivial, classificando todos os pixels como a classe majoritária (fundo foliar) e ignorando o alvo, conforme evidenciado pela falha de segmentação na Figura \ref{fig:relatorio_black}. A tentativa de compensar essa falha através de aumento de dados revelou-se insuficiente para retificar este viés estatístico.
+
+\begin{figure}[htb]
+    \centering
+    \caption{Relatório Analítico de Segmentação - Experimento 2 (Dataset Black). Falha do modelo espacial (ausência de predição).}
+    \includegraphics[width=0.9\textwidth]{figuras/relatorio_black.png}
+    \fonte{O autor (2026).}
+    \label{fig:relatorio_black}
+\end{figure}
+
+\section{Experimento 3: Camuflagem Crítica e Abordagem Híbrida (Dataset Green)}
+\label{sec:exp_green}
+
+Para contornar a deficiência estrutural evidenciada no Dataset Black e enfrentar o desafio definitivo da camuflagem verde-sobre-verde (\textbf{Dataset Green}), a arquitetura foi estendida para o modelo Híbrido, introduzindo a fusão precoce (\textit{early fusion}) do Fluxo Óptico de Farneback aos canais RGB.
+
+O cenário de camuflagem crítica degrada rapidamente a capacidade preditiva de redes estáticas. A Figura \ref{fig:grafico_baseline} ilustra as curvas de convergência (perda e acurácia de validação) ao longo das épocas de treinamento da U-Net clássica. Nota-se a instabilidade da perda e a precocidade da estagnação preditiva, caracterizando o aprisionamento no mínimo local devido à falta de textura discriminante.
+
+\begin{figure}[htb]
+    \centering
+    \caption{Curvas de Aprendizado e Estabilidade de Convergência - Modelo Espacial (Baseline).}
+    \includegraphics[width=0.7\textwidth]{figuras/grafico_baseline.png}
+    \fonte{O autor (2026).}
+    \label{fig:grafico_baseline}
+\end{figure}
+
+Em contrapartida, a Figura \ref{fig:grafico_exp3_flow} evidencia o impacto da componente temporal. A injeção da assinatura cinemática altera a natureza do espaço de otimização, promovendo uma convergência veloz e estável, com contínua redução da perda funcional de treinamento e validação.
+
+\begin{figure}[htb]
+    \centering
+    \caption{Curvas de Aprendizado e Estabilidade de Convergência - Modelo Híbrido (Fluxo Óptico).}
+    \includegraphics[width=0.7\textwidth]{figuras/grafico_exp3_flow.png}
+    \fonte{O autor (2026).}
+    \label{fig:grafico_exp3_flow}
+\end{figure}
+
+A análise sugere que a incorporação do Fluxo Óptico Denso operou como um autêntico mapa de saliência (\textit{saliency map}). A componente temporal introduziu valores de ativação exclusivamente na Região de Interesse, garantindo uma altíssima relação sinal-ruído. Durante o \textit{backpropagation}, propagou gradientes elevados forçando a atualização dos pesos focada na dinâmica do objeto. Como resultado, o modelo Híbrido transpassou a ambiguidade espectral. O mapa de inferência final, ilustrado na Figura \ref{fig:relatorio_green}, demonstra a notável capacidade do modelo em delinear a morfologia do espécime camuflado, suprimindo os falsos positivos de reflexos nas nervuras.
+
+\begin{figure}[htb]
+    \centering
+    \caption{Relatório Analítico de Segmentação - Experimento 3 (Dataset Green). Detecção bem-sucedida pelo modelo híbrido.}
+    \includegraphics[width=0.9\textwidth]{figuras/relatorio_green.png}
+    \fonte{O autor (2026).}
+    \label{fig:relatorio_green}
+\end{figure}
+
+A superioridade matemática da arquitetura baseada em fluxo diante da camuflagem crítica é quantificada na Tabela \ref{tab:metricas_desempenho}, revelando a drástica evolução da métrica IoU comparada aos modelos espaciais.
 
 \begin{table}[htb]
     \centering
@@ -31,24 +85,6 @@ Com isso, o modelo logrou transpor simultaneamente o viés estatístico do desba
     \end{tabular}
     \fonte{O autor (2026).}
 \end{table}
-
-A análise visual corrobora as métricas escalares. A Figura \ref{fig:grafico_baseline} ilustra as curvas de convergência (perda e acurácia de validação) ao longo das épocas de treinamento da U-Net clássica, evidenciando a instabilidade perante o desbalanceamento. Em contrapartida, a Figura \ref{fig:relatorio_final} exibe o relatório final de inferência preditiva, destacando que a arquitetura híbrida logrou não apenas detectar o espécime camuflado, mas também delinear sua morfologia com notável continuidade estrutural, suprimindo falsos positivos ocasionados por reflexos estáticos nas nervuras da folha.
-
-\begin{figure}[htb]
-    \centering
-    \caption{Curvas de Aprendizado e Estabilidade de Convergência - Modelo Baseline.}
-    \includegraphics[width=0.7\textwidth]{figuras/grafico_baseline.png}
-    \fonte{O autor (2026).}
-    \label{fig:grafico_baseline}
-\end{figure}
-
-\begin{figure}[htb]
-    \centering
-    \caption{Relatório Analítico de Segmentação - Contraste visual entre a predição estática e a híbrida sob mimetismo.}
-    \includegraphics[width=0.9\textwidth]{figuras/RELATORIO_FINAL_V10.png}
-    \fonte{O autor (2026).}
-    \label{fig:relatorio_final}
-\end{figure}
 
 \section{Limitações e Implicações Práticas}
 \label{sec:limitacoes}

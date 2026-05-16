@@ -1692,7 +1692,7 @@
 
  \renewcommand*{\l@section}[2]
  {% luiz - o xmakefirstuc está funcionando, todavia a primeira coisa que vem é o número... e depois o texto, então ele não deixa a primeira letra maiúscula por causa disso... tem que ver como resolver
-     \l@chapapp{\ABNTEXsectionfont\xmakefirstuc{#1}}{#2}{\cftsectionname}
+     \l@chapapp{\ABNTEXsectionfont #1}{#2}{\cftsectionname}
  }
  
  \renewcommand{\cftdotsep}{0.8}
