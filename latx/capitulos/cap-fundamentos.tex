@@ -1,5 +1,7 @@
-\chapter{Fundamentos Teóricos}
+\chapter{FUNDAMENTAÇÃO TEÓRICA}
 \label{cap:fundamentacao_teorica}
+
+Esta seção revisa os principais conceitos teóricos que sustentam este trabalho, englobando as arquiteturas de aprendizado profundo, a formulação do fluxo óptico, técnicas de pré-processamento, métricas de avaliação e trabalhos relacionados.
 
 \section{Segmentação Semântica e a Arquitetura U-Net}
 \label{sec:unet}
@@ -91,3 +93,63 @@ Em cenários de camuflagem crítica, superfícies de textura altamente homogêne
 Diferente da equalização de histograma global, o CLAHE subdivide a imagem em pequenas sub-regiões contextuais não sobrepostas chamadas de \textit{tiles} (geralmente de dimensões $8\times8$ pixels). Para cada uma dessas células, calcula-se um histograma local independente. Para evitar a amplificação excessiva de ruídos de alta frequência em regiões homogêneas, o CLAHE introduz um teto de corte (\textit{clip limit}) no histograma.
 
 Os pixels que excedem o limite estabelecido pelo \textit{clip limit} são cortados e uniformemente redistribuídos entre todas as classes (\textit{bins}) do histograma local antes da computação da Função de Distribuição Acumulada (CDF). Para eliminar descontinuidades visuais e artefatos de bloco nas fronteiras dos \textit{tiles}, os mapeamentos finais dos níveis de intensidade dos pixels são calculados através de uma interpolação bilinear contínua das funções de transformação das quatro células adjacentes.
+
+\section{Métricas para Validação}
+\label{sec:metricas_validacao}
+
+Para avaliar rigorosamente o desempenho dos modelos de aprendizado profundo desenvolvidos neste trabalho, é imprescindível o uso de métricas estatísticas sólidas. Em cenários de desbalanceamento severo de classes, como o encontrado na detecção de pequenos insetos camuflados, métricas globais podem ser enganosas, justificando a adoção de indicadores específicos baseados na matriz de confusão. A matriz contabiliza os Verdadeiros Positivos (TP - \textit{True Positives}), Falsos Positivos (FP - \textit{False Positives}), Verdadeiros Negativos (TN - \textit{True Negatives}) e Falsos Negativos (FN - \textit{False Negatives}).
+
+\subsection{Acurácia (Accuracy)}
+A acurácia mensura a proporção geral de predições corretas em relação ao total de pixels avaliados. Matematicamente, é definida como:
+
+\begin{equation}
+    Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
+Embora útil em contextos balanceados, a acurácia é insuficiente em cenários onde a classe majoritária (fundo foliar) domina mais de $99\%$ da imagem, pois classificar toda a imagem como fundo resultaria em uma falsa percepção de alta precisão.
+
+\subsection{Precisão (Precision)}
+A precisão quantifica a proporção de verdadeiros positivos dentre todas as predições classificadas como positivas pelo modelo. É fundamental para mensurar a confiabilidade da rede e minimizar os falsos alarmes causados por variações de textura da folha.
+
+\begin{equation}
+    Precision = \frac{TP}{TP + FP}
+\end{equation}
+
+\subsection{Sensibilidade (Recall ou Sensitivity)}
+Também conhecida como Taxa de Verdadeiros Positivos (TPR), a sensibilidade mede a capacidade do modelo de encontrar todos os alvos reais. No contexto do Manejo Integrado de Pragas, é crucial garantir que nenhum inseto passe despercebido.
+
+\begin{equation}
+    Recall = \frac{TP}{TP + FN}
+\end{equation}
+
+\subsection{F1-Score}
+O \textit{F1-Score} consiste na média harmônica entre a Precisão e a Sensibilidade. Fornece uma métrica escalar balanceada que penaliza valores discrepantes, sendo fortemente recomendada para avaliar a eficácia do modelo em detectar os espécimes camuflados.
+
+\begin{equation}
+    F1\text{-}Score = 2 \times \frac{Precision \times Recall}{Precision + Recall}
+\end{equation}
+
+\subsection{Interseção sobre a União (IoU)}
+Também referida como Índice de Jaccard, a IoU é a métrica padrão-ouro na segmentação semântica. Ela calcula a razão entre a área de interseção e a área de união da máscara predita pelo modelo com a máscara de \textit{Ground Truth}.
+
+\begin{equation}
+    IoU = \frac{TP}{TP + FP + FN}
+\end{equation}
+
+Uma IoU de $1.0$ indica uma sobreposição perfeita entre a predição e o alvo real, enquanto valores próximos a $0$ indicam ausência de sobreposição ou uma predição difusa.
+
+\section{Estratégias para Lidar com o Desbalanceamento de Classes}
+\label{sec:desbalanceamento}
+
+A detecção de alvos em pequena escala impõe um cenário probabilístico onde os gradientes de erro gerados pela classe minoritária são frequentemente anulados pela classe do plano de fundo durante o treinamento por retropropagação. Para mitigar esse efeito, duas estratégias complementares são abordadas na literatura:
+\begin{enumerate}
+    \item \textbf{Aumento Extensivo de Dados (\textit{Data Augmentation}):} Aplicação de transformações espaciais (rotação, corte, espelhamento) e de intensidade (ruído e variação de brilho) para forçar o modelo a aprender representações invariantes e aumentar artificialmente o volume de amostragem da classe minoritária.
+    \item \textbf{Adaptação da Função de Perda:} A substituição da tradicional Entropia Cruzada por funções sensíveis à proporção de pixels, como a \textit{Dice Loss} ou a \textit{Focal Loss}, garante que erros em regiões diminutas penalizem a rede de forma muito mais agressiva do que erros cometidos na classe de fundo.
+\end{enumerate}
+
+\section{Trabalhos Relacionados}
+\label{sec:trabalhos_relacionados}
+
+O uso de algoritmos de visão computacional na agricultura tem apresentado resultados notáveis. Pesquisas recentes focadas em \textit{Deep Learning} relataram o êxito de CNNs clássicas (como VGG16 e ResNet) na identificação de doenças foliares a partir de lesões visualmente contrastantes. No entanto, a problemática da camuflagem e do mimetismo revela a fragilidade dos descritores puramente morfológicos.
+
+No âmbito de segmentação de objetos camuflados (COS - \textit{Camouflaged Object Segmentation}), abordagens que adotam tensores multicanais para capturar sinais de movimento vêm se destacando. Trabalhos focados na fusão de fluxo óptico e dados RGB evidenciam que o rastreamento da assinatura cinemática não só quebra as barreiras da camuflagem cromática como também melhora a robustez do \textit{pipeline} analítico contra as oscilações dinâmicas de iluminação inerentes a um ambiente não controlado, pavimentando o caminho para o uso da U-Net estendida investigada nesta pesquisa.

@@ -15,18 +15,28 @@ Apesar dos avanços substanciais na identificação de alvos conspícuos, a apli
 
 Para mitigar a insuficiência dos descritores puramente espaciais fornecidos pelos canais RGB, a integração de pistas dinâmicas (temporais) surge como uma vertente teórica robusta. Fundamentada no princípio biológico de que o movimento próprio rompe o isolamento perceptivo provocado pela camuflagem, a fusão de dados baseada em modelos de duas vias (two-stream) demonstrou sucesso expressivo no reconhecimento de ações em vídeo \cite{Simonyan2014}. Ao estimar o vetor de deslocamento de pixels consecutivos por meio do algoritmo de Fluxo Óptico Denso \cite{Farneback2003}, torna-se viável codificar assinaturas cinemáticas que permanecem estritamente invariantes em relação à cor ou ao padrão textural do alvo.
 
-Diante do exposto, o presente trabalho levanta a seguinte questão de pesquisa: em que medida a incorporação explícita de informações de fluxo óptico denso pode mitigar o viés gerado pelo desbalanceamento de classes e pela ausência de contraste espectral na segmentação de insetos em pequena escala?
+A \textbf{hipótese central} deste trabalho postula que, em cenários onde a informação visual estática (domínio espacial RGB) se torna ambígua ou insuficiente, a dinâmica temporal (fluxo de movimento) atua como uma \textit{feature} discriminante invariante à camuflagem. A partir dessa premissa, levanta-se a seguinte questão de pesquisa: em que medida a incorporação explícita de informações de fluxo óptico denso pode mitigar o viés gerado pelo desbalanceamento de classes e pela ausência de contraste espectral na segmentação de insetos em pequena escala?
+
+\section{Objetivo}
 
 O \textbf{objetivo} geral deste Trabalho de Conclusão de Curso consiste em desenvolver, avaliar e comparar uma arquitetura híbrida de rede neural convolucional fundamentada na topologia U-Net modificada para o processamento de 6 canais (RGB concatenado às componentes cartesianas do fluxo óptico), validando a sua eficácia na segmentação semântica de insetos camuflados e de dimensões reduzidas em sequências de vídeo.
 
 Para alcançar o objetivo geral, definem-se os seguintes \textbf{objetivos específicos}:
 
 \begin{itemize}
-    \item Realizar a curadoria e o pr\'e-processamento de um conjunto de dados contendo v\'ideos de insetos sob diferentes n\'{\i}veis de contraste crom\'atico em rela\c{c}\~ao ao fundo foliar;
+    \item Curadoria e pr\'e-processamento de um \textit{dataset} anotado que abrange desde cenários de alto contraste (controle: \textit{Red/Black}) até condições de camuflagem crı́tica (desafio: \textit{Green});
 
-    \item Implementar e validar um pipeline de supervis\~ao fraca baseado em modelos adaptativos de Mistura de Gaussianas \cite{Zivkovic2004} combinado com t\'ecnicas de equaliza\c{c}\~ao adaptativa \cite{Zuiderveld1994ContrastLA} para a rotulagem autom\'atica dos alvos em movimento;
+    \item Desenvolvimento de um \textit{pipeline} de supervis\~ao fraca (\textit{weak supervision}) para a geração automática de \textit{Ground Truth} através de algoritmos de subtração de fundo baseados em Mistura de Gaussianas \cite{Zivkovic2004} combinados com equaliza\c{c}\~ao adaptativa \cite{Zuiderveld1994ContrastLA};
 
-    \item Treinar e avaliar um modelo de refer\^encia (baseline) U-Net puramente espacial sob condi\c{c}\~oes de entrada RGB padr\~ao e sob regime de aumento de dados (data augmentation) extensivo;
+    \item Treinamento e avaliação de um modelo de refer\^encia (baseline) U-Net puramente espacial sob condi\c{c}\~oes de entrada RGB padr\~ao e sob regime de aumento de dados (\textit{data augmentation}) extensivo;
 
-    \item Propor e treinar a arquitetura modificada de fus\~ao precoce (early fusion), contrastando quantitativamente o seu desempenho com os modelos est\'aticos por meio de m\'etricas baseadas na Interse\c{c}\~ao sobre a Uni\~ao (IoU) e converg\^encia da fun\c{c}\~ao de perda (loss).
+    \item Proposta e validação de uma arquitetura U-Net hı́brida, modificada para realizar a fusão de dados espaciais e temporais (Fluxo Óptico Denso), visando mitigar o severo desbalanceamento de classes inerente ao problema e contrastando quantitativamente o seu desempenho perante os modelos est\'aticos.
 \end{itemize}
+
+\section{Organização do texto}
+
+Este documento encontra-se estruturado da seguinte forma: 
+A Seção 2 apresenta a Fundamentação Teórica, incluindo conceitos aprofundados sobre a arquitetura U-Net, o algoritmo de Fluxo Óptico de Farneback, a formulação matemática da modelagem de Mistura de Gaussianas (MOG2) e da equalização adaptativa (CLAHE), bem como as métricas de validação e os trabalhos correlatos. 
+A Seção 3 descreve detalhadamente os Materiais e Métodos, abordando o pipeline de pré-processamento, a formulação da rede neural híbrida e o desenho experimental em três frentes. 
+Na Seção 4 encontram-se os Resultados e Discussões, avaliando exaustivamente o desempenho dos modelos em relação aos diferentes níveis de mimetismo. 
+Por fim, a Seção 5 apresenta a Conclusão do trabalho, pontuando os principais achados práticos e sugerindo perspectivas de pesquisas futuras.

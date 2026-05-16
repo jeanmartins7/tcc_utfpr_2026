@@ -1,5 +1,20 @@
-%%%% CAPÍTULO 5 - CONCLUSÕES E PERSPECTIVAS
-%%
-\chapter{Conclusão (ou considerações finais)}\label{cap:conclusoeseperspectivas}
+\chapter{CONCLUSÃO}\label{cap:conclusao}
 
-Parte final do texto, na qual se apresentam as conclusões do trabalho acadêmico, usualmente denominada Considerações Finais. Pode ser usada outra denominação similar que indique a conclusão do trabalho.
+O presente Trabalho de Conclusão de Curso apresentou e validou uma metodologia híbrida robusta para a segmentação semântica de objetos de pequena escala sob condições de camuflagem severa no escopo do monitoramento agrícola de pragas. As evidências experimentais permitem as seguintes conclusões principais:
+
+\begin{enumerate}
+    \item \textbf{Insuficiência dos Atributos Espectrais:} Em cenários de \textit{Small Object Detection} com severo desbalanceamento de classes, o contraste cromático isolado provou-se insuficiente para evitar que redes CNN padrão (mesmo com aumento extensivo de dados) convirjam para mínimos locais degenerados, resultando na predição de fundo total e em falsos negativos absolutos.
+    \item \textbf{Redefinição do Espaço de Otimização:} A fusão precoce (\textit{early fusion}) do Fluxo Óptico Denso alterou a natureza do problema matemático de otimização. A tarefa foi efetivamente transposta de um reconhecimento de padrões visuais complexo e ambíguo para uma tarefa primária de localização de intensidade de movimento, simplificando substancialmente a convergência paramétrica da rede neural.
+    \item \textbf{Invariância ao Contraste:} A abordagem proposta demonstrou eficácia transversal, superando com sucesso tanto a barreira extrema da camuflagem (mimetismo completo no \textit{Dataset Green}) quanto o problema da representatividade espacial mitigada (escala reduzida nos \textit{Datasets Red} e \textit{Black}).
+\end{enumerate}
+
+Concomitantemente, a implantação da Modelagem de Mistura de Gaussianas (MOG2) acoplada à equalização adaptativa local (CLAHE) demonstrou ser uma ferramenta altamente promissora de \textit{weak supervision}. Essa abordagem automatizada abre precedentes para a rotulagem de terabytes de sequências agronômicas temporais, mitigando o colossal gargalo financeiro e humano da anotação de \textit{Ground Truth} em escala industrial.
+
+\section{Trabalhos Futuros}
+
+Alicerçado nos achados empíricos desta pesquisa, sugerem-se as seguintes frentes de investigação para a evolução tecnológica do sistema:
+\begin{enumerate}
+    \item \textbf{Curadoria de Dataset In-Situ:} Para a continuidade e maturação comercial desta pesquisa, propõe-se a curadoria de um conjunto de dados adquirido diretamente em campo, visando mitigar a atual lacuna de representatividade entre o ambiente controlado de simulação laboratorial e a realidade agrícola complexa.
+    \item \textbf{Robustez contra Estocasticidade na Produção:} A validação dos modelos em cenários de produção é imperativa para avaliar a robustez real dos algoritmos de Fluxo Óptico frente a variáveis estocásticas não modeladas na simulação atual, tais como variações abruptas de iluminação natural e oclusões parciais por sobreposição foliar.
+    \item \textbf{Artefatos de Movimento Eólico:} Investigar o impacto e as estratégias de supressão matemática de artefatos de movimento espúrios causados pela ação do vento sobre a superfície do substrato (\textit{Musa spp.}), fenômeno que tem o potencial de corromper a assinatura cinética isolada do inseto e degradar a matriz de Farneback.
+\end{enumerate}

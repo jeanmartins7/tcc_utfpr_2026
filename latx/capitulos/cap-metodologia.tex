@@ -1,47 +1,50 @@
 \chapter{MATERIAIS E MÉTODOS}
 \label{cap:materiais_e_metodos}
 
-\section{Constituição e características do conjunto de dados}
+Esta seção detalha os procedimentos metodológicos adotados, desde a curadoria dos dados até as especificações computacionais utilizadas para a execução dos experimentos.
+
+\section{Conjunto de Dados}
 \label{sec:dataset}
 
-O desenvolvimento e a avaliação do sistema de segmentação semântica fundamentam-se em um conjunto de dados composto por sequências de vídeo capturadas em ambiente controlado, simulando cenários reais de monitoramento agrícola foliar. Os dados foram estruturados de forma a abranger diferentes classes de contraste cromático, categorizadas em três cenários principais de visibilidade:
+A constituição da base de dados fundamentou-se na captura de sequências de vı́deo em ambiente controlado, simulando o deslocamento de insetos sobre um substrato foliar da esp\'ecie \textit{Musa spp.} (bananeira). O material audiovisual foi submetido a um processo de decomposição temporal, resultando na extração de aproximadamente 1.500 quadros estáticos (\textit{frames}) por cenário experimental. Os dados foram categorizados em três subconjuntos distintos para isolar as variáveis de contraste e camuflagem:
 
 \begin{enumerate}
-    \item \textbf{Alto Contraste Estático:} Insetos com pigmentação conspícua (notadamente colorações vermelhas e pretas) dispostos sobre superfícies foliares verdes uniformes. Este cenário serve como controle positivo para avaliar a capacidade da rede em extrair bordas puramente espaciais.
-    \item \textbf{Camuflagem Parcial:} Insetos com coloração mista ou tons amarelados, cujo contraste espectral em relação ao substrato é reduzido, mimetizando condições de iluminação variável.
-    \item \textbf{Camuflagem Crítica (Total):} Insetos de coloração estritamente verde dispostos sobre folhas verdes de mesma assinatura espectral. Este cenário representa o núcleo do desafio de pesquisa, onde os histogramas de cor do alvo e do fundo apresentam máxima sobreposição estocástica.
+    \item \textbf{Dataset Red (Desafio 1 - Alto Contraste):} Inseto de coloração vermelha sobre folha verde, caracterizando alto contraste cromático. Este cenário serve como controle positivo (\textit{baseline}) para avaliar a capacidade funcional puramente espacial.
+    \item \textbf{Dataset Black (Desafio 2 - Contraste de Luminância):} Inseto de coloração preta sobre folha verde, caracterizando alto contraste de luminância.
+    \item \textbf{Dataset Green (Desafio 3 - Camuflagem Crítica):} Inseto de coloração estritamente verde dispostos sobre folha verde, apresentando mimetismo cromático e textural completo com o substrato. Este cenário representa o núcleo do desafio de pesquisa.
 \end{enumerate}
 
 Os espécimes avaliados enquadram-se na definição de objetos de pequena escala, ocupando individualmente uma área inferior a $1\%$ do total de pixels de cada quadro do vídeo. Os vídeos foram capturados com resolução nativa de $1920 \times 1080$ pixels a uma taxa de amostragem de 30 quadros por segundo (\textit{fps}), sendo posteriormente subamostrados espacialmente para o formato de $256 \times 256$ pixels para compatibilidade com as restrições de memória computacional das arquiteturas avaliadas.
 
-\section{Pipeline de Pré-processamento e Geração Automática de Máscaras}
-\label{sec:pipeline_preproc}
+Para a rotulagem automática (\textit{Ground Truth}) sob supervisão fraca, os quadros $I_t$ foram equalizados utilizando o algoritmo CLAHE \cite{zuiderveld1994contrast} com \textit{clip limit} parametrizado em $2.0$. O algoritmo MOG2 \cite{zivkovic2004improved} gerou as máscaras binárias através da subtração de fundo, seguido por filtragens morfológicas de fechamento e abertura com elementos estruturantes elípticos de $3 \times 3$.
 
-Devido ao alto custo associado à rotulagem manual pixel a pixel de sequências temporais densas, este trabalho implementa um \textit{pipeline} de supervisão fraca (\textit{weakly supervised learning}) para a geração automatizada das máscaras de anotação (\textit{Ground Truth}), utilizando como premissa o movimento do alvo. O fluxo de processamento é composto por três etapas sequenciais:
+\section{Rede Neural Convolucional (CNN) e Fluxo Óptico}
+\label{sec:cnn_fluxo}
 
-\begin{enumerate}
-    \item \textbf{Maximização de Contraste Local:} Cada quadro $I_t$ é submetido ao algoritmo CLAHE \cite{zuiderveld1994contrast}, operando com uma janela contextual de $8 \times 8$ pixels e limite de corte de histograma (\textit{clip limit}) parametrizado em $2.0$. Esta etapa visa homogeneizar variações de iluminação global e destacar microtexturas nas bordas dos insetos.
-    \item \textbf{Segmentação por Subtração de Fundo:} O quadro filtrado é processado pelo algoritmo MOG2 \cite{zivkovic2004improved}. Para mitigar o efeito de ruídos gerados por trepidações espúrias da câmera ou movimentação sutil da própria folha, a taxa de aprendizado do modelo de segundo plano ($\alpha_{mog}$) foi calibrada dinamicamente, permitindo isolar exclusivamente pixels com energia cinética contínua.
-    \item \textbf{Filtragem Morfológica e Limiarização:} A máscara binária bruta gerada pelo MOG2 passa por operações morfológicas de fechamento (\textit{closing}) utilizando um elemento estruturante estocástico (núcleo elíptico de $3 \times 3$), seguido por uma operação de abertura (\textit{opening}). Este procedimento elimina componentes conectados isolados de tamanho reduzido (ruído térmico do sensor) e preenche eventuais lacunas internas no corpo do inseto, consolidando a máscara final $Y_t \in \{0, 1\}^{H \times W}$.
-\end{enumerate}
+A arquitetura computacional adotada explora a combinação das CNNs com descritores cinemáticos densos. A extração da dinâmica temporal fundamentou-se no algoritmo de Fluxo Óptico Denso de Farneback, capaz de estimar o campo de vetores de deslocamento para todos os pixels da imagem. Para endereçar o desafio do deslocamento de baixa magnitude (movimento lento), definiu-se a janela de amostragem temporal (\textit{temporal stride}) com um passo de $\Delta t = 15$ quadros.
 
-\section{Extração Cinematográfica via Fluxo Óptico}
-\label{sec:extracao_fluxo}
+O algoritmo de Farneback \cite{farneback2003two} é aplicado sobre o par de canais correspondente, gerando uma matriz bidimensional de deslocamento $\mathbf{D}_t = (u, v)$. Para garantir a estabilidade numérica e reforçar a relevância dos gradientes temporais na camada de entrada da rede neural durante o \textit{backpropagation}, a magnitude dos vetores de movimento foi submetida a um coeficiente de amplificação escalar $\alpha = 10.0$.
 
-Para codificar a dinâmica temporal da cena de forma explícita para a rede neural, calcula-se o campo de movimento entre o quadro corrente $I_t$ e um quadro pretérito $I_{t-k}$, onde $k$ representa o passo temporal de deslocamento. O intervalo $k$ atua como um hiperparâmetro de regularização: valores excessivamente baixos ($k=1$) geram vetores de magnitude desprezível para insetos de locomoção lenta, enquanto valores elevados introduzem artefatos de oclusão. Experimentalmente, adotou-se o intervalo dinâmico entre $k = 5$ e $k = 15$.
-
-O algoritmo de Farneback \cite{farneback2003two} é aplicado sobre o par de canais de luminância correspondente, gerando uma matriz bidimensional de deslocamento $\mathbf{D}_t = (u, v)$, onde $u$ e $v$ representam os componentes cartesianos do vetor velocidade para cada coordenada espacial $(x, y)$. Para garantir a estabilidade numérica durante a etapa de otimização da rede neural, os componentes do fluxo são normalizados linearmente e reescalados por um fator ponderação $\alpha_{scale} = 5.0$, sendo mapeados para o intervalo $[-1, 1]$.
-
-\section{Arquitetura Proposta e Desenho Experimental}
-\label{sec:desenho_experimental}
+\section{Avaliação do Modelo}
+\label{sec:avaliacao_modelo}
 
 O desenho experimental deste trabalho foi concebido para contrastar o desempenho de descritores puramente espaciais frente à abordagem de fusão multimodal temporal. Foram estruturados três experimentos comparativos:
 
 \begin{itemize}
     \item \textbf{Experimento 1 (Baseline RGB):} Uma rede U-Net convencional \cite{ronneberger2015unet} com canal de entrada dimensionado para $3$ canais (RGB). O treinamento é realizado de forma direta, expondo a rede à perda de entropia cruzada binária ($BCE$). Este modelo avalia o limite de convergência espacial sob condições severas de camuflagem.
     \item \textbf{Experimento 2 (RGB com Data Augmentation Extensivo):} Utiliza a mesma topologia do Experimento 1, porém aplicando transformações geométricas e espaciais agressivas no conjunto de treinamento (rotações aleatórias, espelhamento, perturbação de brilho, contraste e adição de ruído Gaussiano). O objetivo é verificar se o aumento da variabilidade estatística linear é suficiente para mitigar o viés do desbalanceamento de classes.
-    \item \textbf{Experimento 3 (Arquitetura Híbrida de 6 Canais - Fusão Precoce):} Consiste na modificação da camada de entrada (\textit{input layer}) da U-Net para admitir um tensor dimensional de ordem $H \times W \times 6$. A estrutura do dado de entrada é definida pela concatenação precoce (\textit{early fusion}):
+    \item \textbf{Experimento 3 (Arquitetura Híbrida de 6 Canais - Fusão Precoce):} Avaliação da rede que incorpora a dinâmica temporal, contrastando sua performance analítica nos cenários mimetizados através de métricas conjuntas.
 \end{itemize}
+
+\section{Hardware e Software}
+\label{sec:hardware_software}
+
+O treinamento dos modelos foi realizado em uma infraestrutura computacional equipada com suporte nativo a aceleradores gráficos NVIDIA, o que viabiliza o processamento paralelo em grande escala exigido pelos tensores de imagem e possibilita a execução rápida do algoritmo iterativo de Farneback. A extração de *frames*, o pré-processamento de matrizes e as avaliações foram conduzidos no ambiente interpretado Python versão 3.11.
+
+\section{Modelo de Rede Neural Utilizado (U-Net Híbrida)}
+\label{sec:modelo_unet}
+
+O modelo modificado consistiu na adaptação da camada de entrada (\textit{input layer}) da U-Net para admitir um tensor dimensional de ordem $H \times W \times 6$. A estrutura do dado de entrada é definida pela concatenação precoce (\textit{early fusion}):
 
 \begin{equation}
     X_{input} = [R, G, B, u, v, M_{mag}]
@@ -49,4 +52,9 @@ O desenho experimental deste trabalho foi concebido para contrastar o desempenho
 
 Onde $R, G, B$ representam as matrizes de cor originais, $u, v$ representam os componentes cartesianos do fluxo óptico de Farneback, e $M_{mag} = \sqrt{u^2 + v^2}$ denota a magnitude escalar do vetor de movimento. As camadas convolucionais subsequentes do codificador passam a processar conjuntamente as assinaturas espectrais e as cinemáticas desde as primeiras camadas de extração de características.
 
-O \textit{pipeline} completo de treinamento foi implementado utilizando a biblioteca PyTorch \cite{paszke2019pytorch}. O processo de otimização utiliza o algoritmo Adam \cite{kingma2014adam} com taxa de aprendizado inicial de $\eta = 10^{-4}$ e decaimento programado (\textit{ReduceLROnPlateau}). Para lidar com o desbalanceamento extremo entre os pixels do inseto (classe minoritária) e do fundo (classe majoritária), a função de perda foi parametrizada utilizando uma combinação linear da perda de Dice (\textit{Dice Loss}) com a Entropia Cruzada Ponderada.
+\section{Framework Utilizado}
+\label{sec:framework}
+
+O \textit{pipeline} completo de treinamento, otimização e inferência foi implementado utilizando a biblioteca de código aberto PyTorch \cite{paszke2019pytorch}. O processo de otimização de pesos faz uso do algoritmo Adam \cite{kingma2014adam} com taxa de aprendizado inicial de $\eta = 10^{-4}$ e decaimento programado através de funções de redução ao atingir platôs de validação (\textit{ReduceLROnPlateau}). 
+
+Para lidar estritamente com o desbalanceamento extremo entre os pixels do inseto (classe minoritária) e do fundo (classe majoritária), a função matemática de perda foi customizada, sendo parametrizada por uma combinação linear ponderada entre a perda de Dice (\textit{Dice Loss}) e a Entropia Cruzada. Adicionalmente, as funções de pré-processamento de fluxo óptico e filtragem morfológica apoiaram-se integralmente na biblioteca OpenCV.

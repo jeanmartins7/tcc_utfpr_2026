@@ -1,0 +1,297 @@
+Segmentação de Insetos Camuflados e de Pequena
+Escala utilizando Fusão de Fluxo Óptico em Redes
+Neurais Convolucionais
+1st Jean Marcel Peres Martins
+Programa de Pós-graduação em Informática (PPGI)
+UNIVERSIDADE TECNOLÓGICA FEDERAL DO PARANÁ (UTFPR)
+Cornélio Procópio, Brasil
+jeanmarcel8@gmail.com
+
+Abstract—A detecção automatizada de pragas constitui um
+desafio crı́tico na Agricultura de Precisão, dificultada pelas
+dimensões reduzidas dos vetores e pela complexidade dos fundos
+agrı́colas. Este obstáculo é exacerbado quando o objeto de interesse apresenta mimetismo cromático com o substrato foliar. Este
+trabalho investiga a eficácia de Redes Neurais Convolucionais
+(CNNs) na segmentação semântica de insetos sob condições
+variadas de contraste cromático, variando de alta distinção
+(insetos vermelhos/pretos) a camuflagem total (insetos verdes).
+A metodologia compreende três experimentos comparativos: (1)
+Baseline utilizando a arquitetura U-Net com entrada RGB; (2)
+U-Net submetida a Data Augmentation extensivo; e (3) uma
+arquitetura hı́brida proposta, com topologia modificada para
+processamento de 6 canais (RGB concatenado com Fluxo Óptico
+Denso). Os resultados experimentais demonstram que abordagens
+fundamentadas exclusivamente em caracterı́sticas espaciais falham na convergência, tendendo à classe majoritária (fundo) devido ao severo desbalanceamento de classes, independentemente
+do contraste espectral. Em contrapartida, a arquitetura hı́brida
+proposta obteve sucesso na segmentação em todos os cenários,
+validando a dinâmica temporal como uma feature discriminante
+superior à informação espectral para a detecção de objetos de
+pequena escala em ambientes não estruturados.
+Index Terms—Visão Computacional, Segmentação Semântica,
+Fluxo Óptico, U-Net, Camuflagem, Deep Learning.
+
+Este estudo investiga a intersecção destes desafios, abordando a segmentação de insetos que exibem, simultaneamente,
+dimensões reduzidas e mimetismo severo. A hipótese central
+deste trabalho postula que, em cenários onde a informação
+visual estática (domı́nio espacial RGB) se torna ambı́gua ou
+insuficiente, a dinâmica temporal (fluxo de movimento) atua
+como uma feature discriminante invariante à camuflagem.
+As principais contribuições deste trabalho são:
+1) Curadoria de um dataset anotado que abrange desde
+cenários de alto contraste (controle: Red/Black) até
+condições de camuflagem crı́tica (desafio: Green).
+2) Desenvolvimento de um pipeline de supervisão fraca
+(weak supervision) para a geração automática de Ground
+Truth através de algoritmos de subtração de fundo baseados em Mistura de Gaussianas.
+3) Proposta e validação de uma arquitetura U-Net hı́brida,
+modificada para realizar a fusão de dados espaciais
+e temporais (Fluxo Óptico Denso), visando mitigar o
+severo desbalanceamento de classes inerente ao problema.
+
+I. I NTRODUÇ ÃO
+
+A constituição da base de dados fundamentou-se na captura
+de sequências de vı́deo em ambiente controlado, simulando
+o deslocamento de um inseto sobre substrato foliar (Musa
+spp.). O material audiovisual foi submetido a um processo
+de decomposição temporal, resultando na extração de aproximadamente 1.500 quadros estáticos (frames) por cenário
+experimental.
+Os dados foram categorizados em três subconjuntos distintos para isolar as variáveis de contraste e camuflagem:
+1) Dataset Red (Desafio 1): Inseto de coloração vermelha sobre folha verde, caracterizando alto contraste
+cromático[cite: 30].
+2) Dataset Black (Desafio 2): Inseto de coloração preta
+sobre folha verde, caracterizando alto contraste de luminância[cite: 31].
+3) Dataset Green (Desafio 3): Inseto de coloração verde
+sobre folha verde, apresentando mimetismo cromático e
+textural completo com o substrato[cite: 32].
+
+A implementação efetiva de estratégias de Manejo Integrado de Pragas (MIP) na Agricultura de Precisão é intrinsecamente dependente da robustez de sistemas de Visão
+Computacional na detecção de agentes biológicos em ambientes não estruturados. O estado da arte em segmentação
+semântica, atualmente dominado por arquiteturas baseadas em
+Redes Neurais Convolucionais (CNNs) como U-Net e Mask
+R-CNN, demonstra desempenho notável na identificação de
+objetos macroscópicos. Entretanto, observa-se uma degradação
+abrupta na acurácia em duas condições crı́ticas: (1) Small
+Object Detection, onde a Região de Interesse (RoI) ocupa
+uma área residual da imagem (< 1%); e (2) Camuflagem
+Cromática, cenário em que os histogramas de cor e textura do
+alvo apresentam alta correlação estatı́stica com o background
+(substrato foliar).
+Identify applicable funding agency here. If none, delete this.
+
+A. Aquisição e Preparação do Dataset
+
+Como etapa de pré-processamento, todas as imagens foram
+normalizadas para a resolução espacial de 256 × 256 pixels[cite: 33].
+B. Geração Automática de Ground Truth
+Dada a complexidade e a subjetividade inerentes à anotação
+manual precisa em cenários de mimetismo severo, adotou-se
+uma estratégia de rotulagem automática baseada no algoritmo
+de Subtração de Fundo por Mistura de Gaussianas.
+A metodologia fundamenta-se na modelagem probabilı́stica
+do fundo estático (substrato foliar) para realizar a segregação
+de elementos de primeiro plano (foreground) através da
+detecção de desvios temporais. Visando mitigar ruı́dos de
+sensor e assegurar a consistência topológica das regiões
+de interesse, aplicou-se um pós-processamento baseado em
+operações de morfologia matemática, especificamente abertura
+e dilatação. Esta abordagem garantiu a geração de máscaras
+binárias objetivas, estritamente correlacionadas à dinâmica de
+movimento do alvo.
+C. Engenharia de Features: Fluxo Óptico Denso
+A extração da dinâmica temporal fundamentou-se no algoritmo de Fluxo Óptico Denso de Farneback, capaz de estimar
+o campo de vetores de deslocamento para todos os pixels
+da imagem. Para endereçar o desafio do deslocamento de
+baixa magnitude (movimento lento), introduziu-se um passo
+temporal (temporal stride) variável de k = 5 a k = 15
+quadros. Adicionalmente, aplicou-se um pré-processamento
+via CLAHE (Contrast Limited Adaptive Histogram Equalization) para maximizar o contraste local e evidenciar microtexturas. Esta etapa mostrou-se crı́tica para mitigar o problema
+da abertura em superfı́cies homogêneas, viabilizando a convergência do algoritmo de fluxo sobre o substrato foliar.
+
+Experimento 2 (Data Augmentation): U-Net padrão
+com geradores de imagem aplicando rotação, zoom e
+espelhamento em tempo real. Treinamento por 25 a 50
+épocas. Objetivo: Verificar se a generalização forçada
+compensa a falta de features visuais.
+• Experimento 3 (Hı́brido): U-Net Topologia Modificada
+(RGB + Fluxo). Treinamento por 15 a 50 épocas. Objetivo: Avaliar o impacto da informação temporal na
+segmentação.
+•
+
+III. RESULTADOS E DISCUSS ÃO
+A. Análise do dataset vermelho
+B. Validação em Cenário de Controle (Dataset Red)
+Preliminarmente, o Dataset Red foi estabelecido como
+cenário de controle (baseline) visando a validação funcional
+do pipeline e a calibração fina de hiperparâmetros. Conforme esperado, todas as arquiteturas avaliadas demonstraram
+convergência robusta e alta acurácia de segmentação. Este
+desempenho é atribuı́do à alta distinção espectral (contraste
+cromático) entre o objeto de interesse e o substrato, o que
+trivializa a extração de caracterı́sticas espaciais pela rede
+neural, eliminando a ambiguidade na distinção figura-fundo.
+
+D. Arquitetura da Rede Neural Proposta
+A arquitetura base adotada foi a U-Net totalmente convolucional. Para a implementação da abordagem hı́brida, a topologia da camada de entrada foi reconfigurada para processar
+tensores de dimensão (256, 256, 6). Esta estrutura viabiliza
+uma estratégia de fusão precoce (early fusion), consistindo
+na concatenação, ao longo do eixo de profundidade, dos
+canais espaciais (RGB normalizado) e dos canais temporais
+(Fluxo Óptico). Notavelmente, os componentes de fluxo, representados no espaço de cor HSV, foram submetidos a uma
+ponderação escalar α = 5.0. Este fator de amplificação tem
+por objetivo equalizar a magnitude dos gradientes durante o
+processo de backpropagation, prevenindo que a rede priorize caracterı́sticas estáticas em detrimento da informação de
+movimento.
+II. EXPERIMENTOS
+Os experimentos foram conduzidos sequencialmente nos
+três datasets para avaliar a robustez do método:
+• Experimento 1 (Baseline): U-Net padrão (RGB). Treinamento por 15 a 50 épocas. Objetivo: Avaliar a capacidade
+de detecção baseada puramente em caracterı́sticas visuais.
+
+Fig. 1. Resultados qualitativos do Experimento 1 (Cenário de Controle).
+Observa-se a segmentação precisa facilitada pelo alto contraste cromático
+entre o alvo e o substrato.
+
+C. Padronização do Protocolo Experimental
+Visando assegurar a consistência comparativa e a reprodutibilidade dos resultados nos cenários subsequentes
+(Datasets Black e Green), o protocolo de treinamento e a
+parametrização da engenharia de features foram replicados
+rigorosamente.
+Os hiperparâmetros crı́ticos foram fixados da seguinte
+forma:
+• Dinâmica Temporal: A janela de amostragem para o
+cálculo do Fluxo Óptico foi definida com um passo
+temporal (temporal stride) de ∆t = 15 quadros, visando
+capturar deslocamentos de baixa velocidade.
+• Ponderação de Features: A magnitude dos vetores
+de movimento foi submetida a um coeficiente de
+
+amplificação escalar α = 10.0, reforçando a relevância
+dos gradientes temporais na camada de entrada.
+• Otimização: O ciclo de aprendizado profundo (Deep
+Learning training loop) foi estendido por 50 épocas para
+garantir a plena convergência da função de perda em
+todos os conjuntos de dados.
+D. Limitações em Cenários de Contraste de Luminância
+(Dataset Black)
+A etapa subsequente de validação incidiu sobre o Dataset
+Black, caracterizado pela presença de um espécime de
+coloração escura. Neste cenário, observou-se uma limitação
+crı́tica das abordagens puramente espaciais: tanto a arquitetura
+U-Net padrão quanto a variante com Data Augmentation
+demonstraram incapacidade de segmentar o objeto.
+A análise de erro indica que, apesar da diferença de luminância, a assinatura espectral do inseto apresentou baixa
+distinção em relação ao substrato foliar (Musa spp.), resultando em uma falha de convergência onde a rede priorizou a
+classe majoritária (fundo). Entretanto, a hipótese da dinâmica
+temporal foi corroborada: ao incorporar a componente de
+Fluxo Óptico Denso, o sistema superou a ambiguidade visual,
+detectando o alvo exclusivamente através de sua magnitude de
+deslocamento.
+
+insuficientes para retificar este viés estatı́stico inerente ao
+dataset.
+E. Eficácia da Abordagem Hı́brida (Experimento 3)
+Os resultados obtidos no Experimento 3 evidenciam a
+robustez de generalização da abordagem proposta, a qual
+manteve desempenho consistente transversalmente aos três
+cenários avaliados (Green, Red, Black). A análise dos mapas
+de ativação sugere que a incorporação do Fluxo Óptico Denso
+operou, funcionalmente, como um mapa de saliência (saliency
+map) de alta magnitude.
+Em contraste com a estaticidade dos canais RGB, a componente temporal introduziu valores de ativação significativos
+exclusivamente na Região de Interesse (RoI), garantindo uma
+alta relação sinal-ruı́do em relação ao fundo (zero-motion).
+Do ponto de vista da otimização, esta disparidade induziu a
+propagação de gradientes de erro elevados durante a etapa de
+backpropagation. Este mecanismo forçou a atualização dos
+pesos sinápticos focada na dinâmica do objeto, permitindo
+ao modelo transpor simultaneamente o viés estatı́stico do
+desbalanceamento de classes e a ambiguidade espectral da
+camuflagem.
+
+Fig. 3. Comparativo de desempenho da Abordagem Hı́brida. A coluna da
+direita demonstra a capacidade do modelo em segmentar corretamente o alvo
+em movimento, superando o mimetismo que falhou nas abordagens estáticas.
+Fig. 2. Resultados qualitativos do Experimento 2. Nota-se a ineficácia das
+técnicas baseadas apenas em aparência (esquerda/centro) devido à baixa
+discriminação cromática, contrastando com a detecção precisa obtida pela
+fusão com Fluxo Óptico (direita).
+
+Estes resultados corroboram que a limitação preponderante do sistema transcende a camuflagem espectral, residindo, primordialmente, no severo Desbalanceamento de
+Classes.Observa-se que a Região de Interesse (RoI) compreende uma fração residual (< 0, 5%) da dimensão espacial
+da imagem[cite: 60].
+Consequentemente, a otimização da função de perda (Loss
+Function) estagnou em um mı́nimo local degenerado: a rede
+convergiu para uma solução trivial onde a classificação de
+todos os pixels como a classe majoritária (fundo) maximiza
+artificialmente a acurácia global para > 99%[cite: 61]. As
+técnicas de Data Augmentation, por preservarem a razão de
+ocupação espacial entre o objeto e o fundo, mostraram-se
+
+F. Análise Visual Qualitativa
+A inspeção qualitativa das predições finais revela uma
+estrita correlação espacial entre as máscaras de segmentação
+geradas e os campos de magnitude do Fluxo Óptico. Observase um fenômeno de intermitência na detecção: durante os
+intervalos de repouso do espécime (velocidade nula), a rede
+suprime a máscara de segmentação. Este comportamento confirma empiricamente a premissa de que a arquitetura aprendeu a priorizar a dinâmica temporal como feature discriminante primária, em detrimento das caracterı́sticas estáticas de
+aparência.
+IV. CONCLUS ÃO
+Este trabalho apresentou e validou uma metodologia hı́brida
+robusta para a segmentação semântica de objetos de pequena
+
+escala sob condições de camuflagem severa. As evidências
+experimentais permitem as seguintes conclusões:
+1) Insuficiência dos Atributos Espectrais: Em cenários de
+Small Object Detection com severo desbalanceamento
+de classes, o contraste cromático isolado é insuficiente
+para evitar que redes CNN padrão convirjam para
+mı́nimos locais degenerados (predição de fundo total).
+2) Redefinição do Espaço de Otimização: A fusão
+precoce (Early Fusion) do Fluxo Óptico Denso altera a natureza do problema de otimização. A tarefa
+é efetivamente transposta de um reconhecimento de
+padrões visuais complexo e ambı́guo para uma tarefa de
+localização de intensidade de movimento, simplificando
+a convergência da rede.
+3) Invariância ao Contraste: A abordagem proposta
+demonstrou eficácia transversal, superando tanto a barreira da camuflagem (mimetismo no Dataset Green)
+quanto o problema de representatividade espacial (escala
+reduzida nos Datasets Red/Black).
+Para trabalhos futuros para a continuidade desta pesquisa,
+propõe-se a curadoria de um dataset adquirido in-situ (em
+campo), visando mitigar a lacuna de representatividade entre
+o ambiente controlado de simulação e a realidade agrı́cola. A
+validação dos modelos em cenários de produção é imperativa
+para avaliar a robustez dos algoritmos de Fluxo Óptico frente
+a variáveis estocásticas não modeladas na simulação atual,
+tais como variações abruptas de iluminação natural, oclusões
+parciais por sobreposição foliar e a presença de artefatos de
+movimento causados pela ação do vento
+R EFERENCES
+[1] O. Ronneberger, P. Fischer, and T. Brox, “U-net: Convolutional networks
+for biomedical image segmentation,” in International Conference on
+Medical Image Computing and Computer-Assisted Intervention (MICCAI), Springer, 2015, pp. 234–241.
+[2] G. Farneback, “Two-frame motion estimation based on polynomial
+expansion,” in Scandinavian Conference on Image Analysis (SCIA),
+Springer, 2003, pp. 363–370.
+[3] K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for image
+recognition,” in Proceedings of the IEEE Conference on Computer Vision
+and Pattern Recognition (CVPR), 2016, pp. 770–778.
+[4] Z. Zivkovic, “Improved adaptive Gaussian mixture model for background subtraction,” in Proceedings of the 17th International Conference
+on Pattern Recognition (ICPR), 2004, vol. 2, pp. 28–31.
+[5] K. Simonyan and A. Zisserman, “Two-stream convolutional networks
+for action recognition in videos,” in Advances in Neural Information
+Processing Systems (NeurIPS), 2014, pp. 568–576.
+[6] D.-P. Fan, G.-P. Ji, G. Sun, M.-M. Cheng, J. Shen, and L. Shao, “Camouflaged object detection,” in Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR), 2020, pp. 2777–
+2787.
+[7] K. Zuiderveld, “Contrast limited adaptive histogram equalization,” in
+Graphics Gems IV, P. S. Heckbert, Ed. San Diego, CA, USA: Academic
+Press Professional, 1994, pp. 474–485.
+[8] L. C. Ngugi, M. Abelwahab, and M. Abo-Zahhad, “Recent advances
+in image processing techniques for automated leaf pest diagnosis: A
+review,” Wireless Communications and Mobile Computing, vol. 2021,
+pp. 1–22, 2021.
+[9] Z. Teed and J. Deng, “RAFT: Recurrent All-Pairs Field Transforms for
+Optical Flow,” in European Conference on Computer Vision (ECCV),
+Springer, 2020, pp. 402–419.
+
+
