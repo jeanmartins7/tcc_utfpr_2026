@@ -1,0 +1,508 @@
+%%%% REFERÊNCIAS
+%%
+%% Conjunto padronizado de elementos descritivos retirados de um documento, que permite sua identificação individual.
+%%
+%% Cada entrada no arquivo BibTeX segue um formato padrão. Este formato muda ligeiramente baseado no tipo de entrada, mas a sintaxe
+%% continua a mesma.
+%%
+%% O rótulo de cada entrada não pode conter caracteres especiais, acentuados ou cedilha.
+%%
+%% A formatação do texto no campo "AUTHOR" deve obedecer algumas regras:
+%%   - Acento agudo:        "á = {\'a}".
+%%   - Acento crase:        "à = {\`a}".
+%%   - Acento til:          "ã = {\~a}".
+%%   - Acento circunflexo:  "ê = {\^e}".
+%%   - Acento trema:        "ü = {\"u}".
+%%   - Acento na letra i:   "í = {\'\i}".
+%%   - Cedilha:             "ç = {\c{c}}".
+%%   - Sobrenome composto:  "Santos, Filho, Jos{\'e} C. S.; da Silva, Erivanildo Lopes".
+%%   - Nome de organização: "{\mbox IONA Technologies PLC}".
+%%
+%% A formatação do texto no campo "TITLE" deve obedecer algumas regras (também válidas para o texto no campo "AUTHOR"):
+%%   - MAIÚSCULAS: "REAL = {REAL}".
+%%   - Minúsculas: "real = {real}".
+%%   - CamelCase:  "Real = {R}eal".
+
+%% TIPOS DE ENTRADA
+%%
+%% Ao inserir uma referência no banco de dados, a primeira coisa a decidir é o tipo de entrada. Existem vários tipos de entrada, mas
+%% não são completas, porém são suficientes para o BibTeX fornecer entradas para lidar com praticamente qualquer tipo de referência
+%% razoavelmente bem.
+
+%% ARTICLE - Um artigo de um jornal ou revista.
+%%   - Campos requeridos: AUTHOR, TITLE, JOURNAL e YEAR.
+%%   - Campos opcionais: VOLUME, NUMBER, PAGES, MONTH e NOTE.
+
+% SEBRAE. Entenda a importância da normalização para o seu negócio. Normas técnicas. 8 jan. 2016. Disponível em: http://www.sebrae.com.br/sites/PortalSebrae/artigos/entenda-a-importancia-da-normalizacao-para-o-seu-negocio. Acesso em: 11 mar. 2025. (Modelo de referência: material disponível na Internet).
+
+@article{paszke2019pytorch,
+  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and Kopf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+  title     = {PyTorch: An Imperative Style, High-Performance Deep Learning Library},
+  journal   = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {32},
+  pages     = {8024--8035},
+  year      = {2019}
+}
+
+@article{kingma2014adam,
+  author    = {Kingma, Diederik P. and Ba, Jimmy},
+  title     = {Adam: A method for stochastic optimization},
+  journal   = {arXiv preprint arXiv:1412.6980},
+  year      = {2014}
+}
+
+@article{bradski2000opencv,
+  author    = {Bradski, Gary},
+  title     = {{The OpenCV Library}},
+  journal   = {Dr. Dobb's Journal of Software Tools},
+  volume    = {25},
+  number    = {11},
+  pages     = {120--125},
+  year      = {2000}
+}
+
+@article{NGUGI202127,
+title = {Recent advances in image processing techniques for automated leaf pest and disease recognition – A review},
+journal = {Information Processing in Agriculture},
+volume = {8},
+number = {1},
+pages = {27-51},
+year = {2021},
+issn = {2214-3173},
+doi = {https://doi.org/10.1016/j.inpa.2020.04.004},
+url = {https://www.sciencedirect.com/science/article/pii/S2214317320300196},
+author = {Lawrence C. Ngugi and Moataz Abelwahab and Mohammed Abo-Zahhad},
+keywords = {Precision agriculture, Machine learning, Plant disease recognition, Image processing, Convolutional neural networks},
+abstract = {Fast and accurate plant disease detection is critical to increasing agricultural productivity in a sustainable way. Traditionally, human experts have been relied upon to diagnose anomalies in plants caused by diseases, pests, nutritional deficiencies or extreme weather. However, this is expensive, time consuming and in some cases impractical. To counter these challenges, research into the use of image processing techniques for plant disease recognition has become a hot research topic. In this paper, we provide a comprehensive review of recent studies carried out in the area of crop pest and disease recognition using image processing and machine learning techniques. We hope that this work will be a valuable resource for researchers in this area of crop pest and disease recognition using image processing techniques. In particular, we concentrate on the use of RGB images owing to the low cost and high availability of digital RGB cameras. We report that recent efforts have focused on the use of deep learning instead of training shallow classifiers using hand-crafted features. Researchers have reported high recognition accuracies on particular datasets but in many cases, the performance of those systems deteriorated significantly when tested on different datasets or in field conditions. Nevertheless, progress made so far has been encouraging. Experimental results showing the leaf disease recognition performance of ten CNN architectures in terms of recognition accuracy, recall, precision, specificity, F1-score, training duration and storage requirements are also presented. Subsequently, recommendations are made on the most suitable architectures to deploy in conventional as well as mobile/embedded computing environments. We also discuss some of the unresolved challenges that need to be addressed in order to develop practical automatic plant disease recognition systems for use in field conditions.}
+}
+
+@inproceedings{he2016residual,
+  added-at = {2024-01-08T12:26:11.000+0100},
+  author = {He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+  biburl = {https://www.bibsonomy.org/bibtex/2f08d8f1a1881a5c9ee27060e40ada500/weihao},
+  booktitle = {Proceedings of 2016 IEEE Conference on Computer Vision and Pattern Recognition},
+  doi = {10.1109/CVPR.2016.90},
+  interhash = {d2fe72bcc2c02bacc9fae990ec4d4927},
+  intrahash = {f08d8f1a1881a5c9ee27060e40ada500},
+  issn = {1063-6919},
+  keywords = {a},
+  location = {Las Vegas, NV, USA},
+  month = jun,
+  pages = {770--778},
+  publisher = {IEEE},
+  series = {CVPR '16},
+  timestamp = {2024-01-08T12:26:11.000+0100},
+  title = {{Deep Residual Learning for Image Recognition}},
+  url = {http://ieeexplore.ieee.org/document/7780459},
+  year = 2016
+}
+
+@InProceedings{RONNEBERGER,
+author="Ronneberger, Olaf
+and Fischer, Philipp
+and Brox, Thomas",
+editor="Navab, Nassir
+and Hornegger, Joachim
+and Wells, William M.
+and Frangi, Alejandro F.",
+title="U-Net: Convolutional Networks for Biomedical Image Segmentation",
+booktitle="Medical Image Computing and Computer-Assisted Intervention -- MICCAI 2015",
+year="2015",
+publisher="Springer International Publishing",
+address="Cham",
+pages="234--241",
+abstract="There is large consent that successful training of deep networks requires many thousand annotated training samples. In this paper, we present a network and training strategy that relies on the strong use of data augmentation to use the available annotated samples more efficiently. The architecture consists of a contracting path to capture context and a symmetric expanding path that enables precise localization. We show that such a network can be trained end-to-end from very few images and outperforms the prior best method (a sliding-window convolutional network) on the ISBI challenge for segmentation of neuronal structures in electron microscopic stacks. Using the same network trained on transmitted light microscopy images (phase contrast and DIC) we won the ISBI cell tracking challenge 2015 in these categories by a large margin. Moreover, the network is fast. Segmentation of a 512x512 image takes less than a second on a recent GPU. The full implementation (based on Caffe) and the trained networks are available at http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net.",
+isbn="978-3-319-24574-4"
+}
+
+@InProceedings{Fan_2020_CVPR,
+author = {Fan, Deng-Ping and Ji, Ge-Peng and Sun, Guolei and Cheng, Ming-Ming and Shen, Jianbing and Shao, Ling},
+title = {Camouflaged Object Detection},
+booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+month = {June},
+year = {2020}
+}
+
+@article{Simonyan2014,
+  author       = {Karen Simonyan and
+                  Andrew Zisserman},
+  title        = {Two-Stream Convolutional Networks for Action Recognition in Videos},
+  journal      = {CoRR},
+  volume       = {abs/1406.2199},
+  year         = {2014},
+  url          = {http://arxiv.org/abs/1406.2199},
+  eprinttype   = {arXiv},
+  eprint       = {1406.2199},
+  timestamp    = {Mon, 13 Aug 2018 16:47:39 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/SimonyanZ14.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Farneback2003,
+author = {Farnebäck, Gunnar},
+year = {2003},
+month = {06},
+pages = {363-370},
+title = {Two-Frame Motion Estimation Based on Polynomial Expansion},
+volume = {2749},
+isbn = {978-3-540-40601-3},
+journal = {In: Image analysis},
+doi = {10.1007/3-540-45103-X_50}
+}
+
+@INPROCEEDINGS{Zivkovic2004,
+  author={Zivkovic, Z.},
+  booktitle={Proceedings of the 17th International Conference on Pattern Recognition, 2004. ICPR 2004.}, 
+  title={Improved adaptive Gaussian mixture model for background subtraction}, 
+  year={2004},
+  volume={2},
+  number={},
+  pages={28-31 Vol.2},
+  keywords={Layout;Pixel;Object detection;Density functional theory;Intelligent systems;Computer vision;Adaptive algorithm;Equations;Cameras;Surveillance},
+  doi={10.1109/ICPR.2004.1333992}}
+
+@inproceedings{Zuiderveld1994ContrastLA,
+  title={Contrast Limited Adaptive Histogram Equalization},
+  author={Karel J. Zuiderveld},
+  booktitle={Graphics gems},
+  year={1994},
+  url={https://api.semanticscholar.org/CorpusID:62707267}
+}
+
+@inproceedings{ronneberger2015unet,
+  author    = {Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
+  title     = {U-net: Convolutional networks for biomedical image segmentation},
+  booktitle = {International Conference on Medical Image Computing and Computer-Assisted Intervention (MICCAI)},
+  pages     = {234--241},
+  year      = {2015},
+  publisher = {Springer}
+}
+
+@inproceedings{farneback2003two,
+  author    = {Farneback, Gunnar},
+  title     = {Two-frame motion estimation based on polynomial expansion},
+  booktitle = {Scandinavian Conference on Image Analysis (SCIA)},
+  pages     = {363--370},
+  year      = {2003},
+  publisher = {Springer}
+}
+
+@inproceedings{he2016deep,
+  author    = {He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and {Sun}, Jian},
+  title     = {Deep residual learning for image recognition},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {770--778},
+  year      = {2016}
+}
+
+@inproceedings{zivkovic2004improved,
+  author    = {Zivkovic, Zoran},
+  title     = {Improved adaptive Gaussian mixture model for background subtraction},
+  booktitle = {Proceedings of the 17th International Conference on Pattern Recognition (ICPR)},
+  volume    = {2},
+  pages     = {28--31},
+  year      = {2004}
+}
+
+@inproceedings{simonyan2014two,
+  author    = {Simonyan, Karen and Zisserman, Andrew},
+  title     = {Two-stream convolutional networks for action recognition in videos},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  pages     = {568--576},
+  year      = {2014}
+}
+
+@inproceedings{fan2020camouflaged,
+  author    = {Fan, Deng-Ping and Ji, Ge-Peng and Sun, Guolei and Cheng, Ming-Ming and Shen, Jianbing and Shao, Ling},
+  title     = {Camouflaged object detection},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {2777--2787},
+  year      = {2020}
+}
+
+@incollection{zuiderveld1994contrast,
+  author    = {Zuiderveld, Karel},
+  title     = {Contrast limited adaptive histogram equalization},
+  booktitle = {Graphics Gems IV},
+  editor    = {Heckbert, Paul S.},
+  pages     = {474--485},
+  year      = {1994},
+  publisher = {Academic Press Professional},
+  address   = {San Diego, CA, USA}
+}
+
+@article{ngugi2021recent,
+  author    = {Ngugi, Lawrence C. and Abelwahab, Mohamed and Abo-Zahhad, Mohamed},
+  title     = {Recent advances in image processing techniques for automated leaf pest diagnosis: A review},
+  journal   = {Wireless Communications and Mobile Computing},
+  volume    = {2021},
+  pages     = {1--22},
+  year      = {2021},
+  publisher = {Hindawi}
+}
+
+
+@misc{SEBRAE:2016,
+  TITLE         = {Normas técnicas},
+  AUTHOR        = {{SEBRAE}},
+  Institution  = {Entenda a importância da normalização para o seu negócio.},
+  YEAR          = {2016},
+  mounth = {8 jan},
+  URL = {http://www.sebrae.com.br/sites/PortalSebrae/artigos/entenda-a-importancia-da-normalizacao-para-o-seu-negocio},
+  URLACCESSDATE = {11 mar. 2025},
+}
+
+
+@INPROCEEDINGS{Renaux2001,
+  AUTHOR       = {Douglas P. B. Renaux and Faimara do Rocio Strauhs and Aline França Abreu and Leandro Gustavo Biss Becker},
+  TITLE        = {Gestão do conhecimento de um laboratório de pesquisa: uma abordagem prática},
+  BOOKTITLE    = {Simpósio Internacional de Gestão do Conhecimento},
+  YEAR         = {2001},
+  VOLUME        = {4},
+  PAGES        = {195-208},
+  pUBLISHER = {PUC-PR},
+  ADDRESS      = {Curitiba},
+}
+
+@article{Monteiro2009,
+  author = {S. Monteiro},
+  title = {Breve espaço entre cor e sombra},
+  journal = {Revista de Letras},
+  year = {2009},
+  month = {dez.},
+  ADDRESS   = {Curitiba,},
+  number = {11},
+  pages = {183--200},
+  volume = {13},
+  subtitle = {o romance da maturidade literária de {Cristóvão Tezza}},
+}
+
+@BOOK{KOTLER:2012,
+  AUTHOR    = {P. KOTLER and H. KARTAJAYA and I. SETIAWAN},
+  TITLE     = {Marketing 3.0},
+  SUBTITLE   = {as forças que estão definindo o novo marketing centrado no ser humano},
+  PUBLISHER = {Elsevier},
+  YEAR      = {2012},
+  ADDRESS   = {Rio de Janeiro},
+  URL = {https://bibliotecas.sebrae.com.br/chronus/ARQUIVOS_CHRONUS/bds/bds.nsf/3472e2ca0932a98d7edbc110c8c58de9/$File/9938.pdf.},
+  URLACCESSDATE = {8 fev. 2025},
+}
+
+@book{DAVENPORT:2012,
+  author = {Laurence Davenport and Thomas H. Prusak},
+  title = {Conhecimento empresarial},
+  subtitle = {como as organizações gerenciam o seu capital intelectual},
+  publisher = {Campus},
+  address = {Rio de Janeiro},
+  YEAR = {2012},
+}
+
+@book{AACR2,
+  author = {},
+  title = {Código de catalogação anglo-americano},
+  edition = {2},
+  publisher = {FEBAB},
+  address = {São Paulo},
+  YEAR = {1983-1985},
+}
+
+@BOOK{Barton:1998,
+  AUTHOR    = {Dorothy Leonard-Barton},
+  TITLE     = {Nascentes do saber},
+  PUBLISHER = {FGV},
+  YEAR      = {1998},
+  ADDRESS   = {Rio de Janeiro},
+}
+
+@manual{BRASIL:2014,
+  TITLE         = {Relatório educação para todos no Brasil 2000-2015},
+  SUBTITLE      = {versão preliminar},
+  AUTHOR        = {{BRASIL}},
+  ORGANIZATION  = {Ministério da Educação},
+  ADDRESS       = {[Brasília, DF]},
+  ORG-SHORT     = {[MEC]},
+  YEAR          = {2014},
+  URL = {http://portal.mec.gov.br/index.php?option=com_docman&view=download&alias=15774-ept-relatorio-06062014&Itemid=30192},
+  URLACCESSDATE = {12 fev. 2025},
+  institution = {Ministério da Educação}, 
+}
+
+@BOOK{FLEURY:2018,
+  AUTHOR    = {A. C. C. FLEURY and M. T. L. FLEURY},
+  TITLE     = {Estratégias empresariais e formação de competências},
+  SUBTITLE   = {um quebra-cabeça caleidoscópico da indústria brasileira},
+  PUBLISHER = {Atlas},
+  EDITION = {3},
+  YEAR      = {2018},
+  ADDRESS   = {São Paulo},
+}
+
+@MANUAL{NBR6023:2018,
+  TITLE         = {{ABNT NBR} 6023},
+  AUTHOR        = {{ABNT}},
+  ORGANIZATION  = {Associação Brasileira de Normas Técnicas},
+  ADDRESS       = {Rio de Janeiro},
+  YEAR          = {2018},
+  ORG-SHORT     = {ABNT},
+  SUBTITLE      = {informação e documentação: referências: elaboração},
+ 
+}
+
+
+@manual{Centro:2025,
+  TITLE         = {As dimensões curriculares de pré-escolar},
+  AUTHOR        = {Centro{ }Social{ }de{ }Azurva},
+  ADDRESS       = {Valência},
+  year = {2020},
+  org-SHORT = {Pré-escolar},
+  URL = {https://centrosocialazurva.org/seccao.php?s=pre-escolar},
+  URLACCESSDATE = {7 ago. 2025},
+}
+
+@BOOK{Pawlina:2018,
+  AUTHOR    = {Michael H. Ross and Wojciech Pawlina},
+  TITLE     = {Histologia},
+  SUBTITLE   = {Texto e Atlas},
+  EDITION = {7},
+  PUBLISHER = {Guanabara Koogan},
+  YEAR      = {2018},
+  ADDRESS   = {Rio de Janeiro},
+  URL = {https://webapp.utfpr.edu.br/bibservices/minhaBiblioteca?ISBN=9788527729888.},
+  URLACCESSDATE = {18 maio 2025},
+  note = {E-book},
+}
+
+@misc{UTFPR:2025,
+  title        = {Sustentabilidade},
+  subtitle = {estudo da {UTFPR} identifica desmatamento em áreas de preservação do {Rio Pato Branco}},
+  author       = {{UTFPR}},
+  Institution = {},
+  shortauthor  = {{UTFPR}},
+  mounth = {21 fev.},
+  year         = {2025},
+  address     = {Curitiba},
+  url = {https://www.instagram.com/p/DHgMWuCP1xt/?utm_source=ig_web_copy_link},
+  URLACCESSDATE = {25 mar. 2025},
+note = {Instagram: @utfpr\_}
+}
+
+@manual{UTFPR2020,
+  title        = {Relatório de gestão},
+  subtitle = {2020},
+  author       = {{UTFPR}},
+  Institution = {Diretoria de Graduação e Educação Profissional. Departamento de Biblioteca},
+  shortauthor  = {{UTFPR}},
+  note         = {(Relatório técnico)},
+  year         = {2020},
+  address     = {Ponta Grossa},
+  publisher    = {[s.n.]},
+  org-short    = {[\textit{s.n.}]},
+}
+
+@MANUAL{INEP:2016,
+  TITLE         = {Relatório dos cursos avaliados em 2015},
+  AUTHOR        = {{INEP}},
+  Institution = {Sistema Nacional de Avaliação da Educação Superior.},
+  ORGANIZATION  = {Sistema Nacional de Avaliação da Educação Superior},
+  ADDRESS       = {Brasília, DF},
+  YEAR          = {2016},
+  ORG-SHORT     = {INEP},
+}
+
+@MANUAL{NBR6028:2021,
+  TITLE         = {{ABNT NBR} 6028},
+  AUTHOR        = {{ABNT}},
+  ORGANIZATION  = {Associação Brasileira de Normas Técnicas},
+  ADDRESS       = {Rio de Janeiro},
+  YEAR          = {2021},
+  ORG-SHORT     = {ABNT},
+  SUBTITLE      = {informação e documentação: resumo -- apresentação}
+}
+
+@MANUAL{NBR6027:2012,
+  TITLE         = {{ABNT NBR} 6027},
+  AUTHOR        = {{ABNT}},
+  ORGANIZATION  = {Associação Brasileira de Normas Técnicas},
+  ADDRESS       = {Rio de Janeiro},
+  YEAR          = {2012},
+  ORG-SHORT     = {ABNT},
+  SUBTITLE      = {informação e documentação: sumário -- apresentação}
+}
+
+@BOOK{KROGH:2001,
+  AUTHOR    = {Georg Von{ }Ichijo and Kazuo Nonaka and Ikujiro Krogh},
+  TITLE     = {Facilitando a criação de conhecimento},
+  PUBLISHER = {Campus},
+  YEAR      = {2001},
+  ADDRESS   = {Rio de Janeiro},
+  SUBTITLE  = {reinventando a empresa com o poder da inovação contínua}
+}
+
+@MANUAL{NBR10520:2023,
+  TITLE         = {{ABNT NBR} 10520},
+  AUTHOR        = {{ABNT}},
+  ORGANIZATION  = {Associação Brasileira de Normas Técnicas},
+  ADDRESS       = {Rio de Janeiro},
+  YEAR          = {2023},
+  ORG-SHORT     = {ABNT},
+  SUBTITLE      = {informação e documentação -- apresentação de citações em documentos}
+}
+
+@MANUAL{NBR14724:2011,
+  TITLE         = {{ABNT NBR} 14724},
+  AUTHOR        = {{ABNT}},
+  ORGANIZATION  = {Associação Brasileira de Normas Técnicas},
+  ADDRESS       = {Rio de Janeiro, RJ},
+  MONTH         = mar,
+  YEAR          = {2024},
+  ORG-SHORT     = {ABNT},
+  SUBTITLE      = {informação e documentação -- trabalhos acadêmicos -- apresentação}
+}
+
+@MASTERSTHESIS{Andrade2005,
+  AUTHOR  = {M. M. Andrade},
+  TITLE   = {Competências requeridas pelos gestores de Instituições de ensino superior privadas},
+  SCHOOL  = {Programa de Pós-Graduação em
+Tecnologia, Universidade Tecnológica Federal do Paraná,},
+  YEAR    = {2005},
+  ADDRESS = {Curitiba,},
+  PAGES   = {150},
+  SUBTITLE= {um estudo em Curitiba e região metropolitana}
+}
+
+@INBOOK{Borges2014,
+  AUTHOR    = {L. O. BORGES and O. H. YAMAMOTO},
+  booktitle  = {Psicologia, organizações e trabalho no Brasil},
+  title = {Mundo do trabalho},
+  SUBTITLE = {construção histórica e desafios contemporâneos},
+  Organization = {{BASTOS, A. V. B; BORGES-ANDRADE, J. E.; ZANELLI, J. C. (Org.)}},
+  PAGES     = {25--72},
+  PUBLISHER = {Artmed},
+  YEAR      = {2014},
+  ADDRESS   = {Porto Alegre},
+  edition      = {2}
+}
+
+@INBOOK{Candido2002,
+  AUTHOR    = {A. Candido},
+  booktitle  = {Textos de intervenção},
+  title = {A literatura e a formação do homem},
+  PAGES     = {67},
+  PUBLISHER = {Duas Cidades},
+  YEAR      = {2002},
+  ADDRESS   = {São Paulo},
+  SERIES    = {Coleção Espírito Crítico},
+}
+
+@MISC{BRASIL:1998,
+  TITLE         = {Lei n. 9.610, de 19 de fevereiro de 1998},
+  AUTHOR        = {{BRASIL}},
+  ORGANIZATION  = {Casa Civil},
+  ADDRESS       = {Brasília, DF:},
+  ORG-SHORT     = {Casa Civil},
+  YEAR          = {1998},
+  URL = {http://www.planalto.gov.br/ccivil_03/leis/L9610.htm},
+  URLACCESSDATE = {11 mar. 2025},
+  SUBTITLE      = {Altera, atualiza e consolida a legislação sobre direitos autorais e dá outras providências}
+}
+

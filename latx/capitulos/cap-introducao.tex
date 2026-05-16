@@ -1,0 +1,32 @@
+%%%% CAPÍTULO 1 - INTRODUÇÃO
+%%
+%% Deve apresentar uma visão global da pesquisa, incluindo: breve histórico, importância e justificativa da escolha do tema,
+%% delimitações do assunto, formulação de hipóteses e objetivos da pesquisa e estrutura do trabalho.
+
+%% Título e rótulo de capítulo (rótulos não devem conter caracteres especiais, acentuados ou cedilha)
+\chapter{Introdução}\label{cap:introducao}
+
+No âmbito da agricultura de precisão, a automação e a otimização do manejo de culturas emergiram como pilares fundamentais para garantir a segurança alimentar global e a sustentabilidade ecológica. Central a esse movimento está o Manejo Integrado de Pragas (MIP), uma abordagem estratégica que preconiza o monitoramento constante e sistemático das populações de insetos para subsidiar tomadas de decisão conscientes quanto à aplicação de defensivos agrícolas. Tradicionalmente, contudo, esse monitoramento depende da inspeção visual humana direta em campo, um processo notoriamente oneroso, lento, suscetível a falhas de amostragem e de difícil escalabilidade para propriedades de larga extensão\cite{NGUGI202127}.
+
+
+Nesse cenário, a visão computacional desponta como uma alternativa tecnológica promissora, viabilizando o desenvolvimento de sistemas automatizados de diagnóstico e contagem capazes de operar de forma contínua e precisa. A popularização de técnicas de Aprendizado Profundo (Deep Learning), alavancada por arquiteturas profundas de extração de características \cite{he2016residual}, revolucionou a interpretação de imagens biológicas. Em particular, a segmentação semântica pixel a pixel baseada na arquitetura U-Net \cite{RONNEBERGER} estabeleceu novos patamares de desempenho ao unificar caminhos de contração e expansão para o mapeamento detalhado de estruturas de interesse.
+
+Apesar dos avanços substanciais na identificação de alvos conspícuos, a aplicação prática desses modelos em ambientes agrícolas reais enfrenta barreiras complexas. Fenômenos de mimetismo cromático e camuflagem, em que a coloração, o brilho e a textura do inseto guardam profunda correlação estatística com o substrato foliar, anulam as pistas visuais estáticas predominantemente exploradas pelas Redes Neurais Convolucionais (CNNs) tradicionais \cite{Fan_2020_CVPR}. Essa limitação é severamente agravada pela natureza de pequena escala dos vetores biológicos, os quais frequentemente ocupam menos de 1\% da área total da imagem capturada. Do ponto de vista computacional, tal cenário resulta em um desbalanceamento extremo de classes durante a etapa de treinamento, induzindo as redes estáticas a convergirem para previsões triviais e errôneas, nas quais o espécime camuflado é negligenciado e assimilado à classe majoritária do fundo foliar.
+
+Para mitigar a insuficiência dos descritores puramente espaciais fornecidos pelos canais RGB, a integração de pistas dinâmicas (temporais) surge como uma vertente teórica robusta. Fundamentada no princípio biológico de que o movimento próprio rompe o isolamento perceptivo provocado pela camuflagem, a fusão de dados baseada em modelos de duas vias (two-stream) demonstrou sucesso expressivo no reconhecimento de ações em vídeo \cite{Simonyan2014}. Ao estimar o vetor de deslocamento de pixels consecutivos por meio do algoritmo de Fluxo Óptico Denso \cite{Farneback2003}, torna-se viável codificar assinaturas cinemáticas que permanecem estritamente invariantes em relação à cor ou ao padrão textural do alvo.
+
+Diante do exposto, o presente trabalho levanta a seguinte questão de pesquisa: em que medida a incorporação explícita de informações de fluxo óptico denso pode mitigar o viés gerado pelo desbalanceamento de classes e pela ausência de contraste espectral na segmentação de insetos em pequena escala?
+
+O \textbf{objetivo} geral deste Trabalho de Conclusão de Curso consiste em desenvolver, avaliar e comparar uma arquitetura híbrida de rede neural convolucional fundamentada na topologia U-Net modificada para o processamento de 6 canais (RGB concatenado às componentes cartesianas do fluxo óptico), validando a sua eficácia na segmentação semântica de insetos camuflados e de dimensões reduzidas em sequências de vídeo.
+
+Para alcançar o objetivo geral, definem-se os seguintes \textbf{objetivos específicos}:
+
+\begin{itemize}
+    \item Realizar a curadoria e o pr\'e-processamento de um conjunto de dados contendo v\'ideos de insetos sob diferentes n\'{\i}veis de contraste crom\'atico em rela\c{c}\~ao ao fundo foliar;
+
+    \item Implementar e validar um pipeline de supervis\~ao fraca baseado em modelos adaptativos de Mistura de Gaussianas \cite{Zivkovic2004} combinado com t\'ecnicas de equaliza\c{c}\~ao adaptativa \cite{Zuiderveld1994ContrastLA} para a rotulagem autom\'atica dos alvos em movimento;
+
+    \item Treinar e avaliar um modelo de refer\^encia (baseline) U-Net puramente espacial sob condi\c{c}\~oes de entrada RGB padr\~ao e sob regime de aumento de dados (data augmentation) extensivo;
+
+    \item Propor e treinar a arquitetura modificada de fus\~ao precoce (early fusion), contrastando quantitativamente o seu desempenho com os modelos est\'aticos por meio de m\'etricas baseadas na Interse\c{c}\~ao sobre a Uni\~ao (IoU) e converg\^encia da fun\c{c}\~ao de perda (loss).
+\end{itemize}
